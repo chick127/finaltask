@@ -10,29 +10,31 @@ const username =
     ? githubuser
     : 'bradtraversy' // fallback username
 
-export const dynamic = 'force-dynamic' // 항상 서버에서 렌더링
+export const dynamic = 'force-dynamic'
 
 export default async function ReposPage() {
   let repos: Repository[] = []
 
-  // 환경변수 존재할 때만 fetch
-  if (process.env.GITHUB_ACCESS_TOKEN) {
+  // 환경변수 존재 여부 체크
+  const token = process.env.GITHUB_ACCESS_TOKEN
+
+  if (token) {
     try {
       const response = await fetch(
         `https://api.github.com/users/${username}/repos`,
         {
           headers: {
-            Authorization: `token ${process.env.GITHUB_ACCESS_TOKEN}`,
+            Authorization: `token ${token}`,
           },
         }
       )
 
       const data = await response.json()
 
-      // 배열이 아니면 빈 배열로 처리
+      // 배열이 아니면 빈 배열 처리
       repos = Array.isArray(data) ? data : []
       if (!Array.isArray(data)) {
-        console.warn('Unexpected response from GitHub API:', data)
+        console.warn('Unexpected GitHub API response:', data)
       }
     } catch (error) {
       console.error('Error fetching GitHub repos:', error)
@@ -40,7 +42,7 @@ export default async function ReposPage() {
     }
   } else {
     console.warn('No GitHub token provided, using empty repos list')
-    repos = [] // 빌드 시점에 token 없으면 빈 배열
+    repos = [] // 환경변수 없으면 빈 배열
   }
 
   return (
