@@ -4,10 +4,10 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { repoName: string } }
+  { params }: { params: Promise<{ repoName: string }> }
 ) {
   try {
-    const { repoName } = params
+    const { repoName } = await params
 
     await connectMongoDB()
 
