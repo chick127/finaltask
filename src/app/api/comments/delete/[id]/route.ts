@@ -4,11 +4,12 @@ import { NextRequest, NextResponse } from 'next/server'
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     await connectMongoDB()
-    const deletedComment = await Comment.findByIdAndDelete(params.id)
+    const deletedComment = await Comment.findByIdAndDelete(id)
 
     if (!deletedComment) {
       return NextResponse.json({ error: 'Comment not found' }, { status: 404 })
