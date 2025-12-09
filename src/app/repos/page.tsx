@@ -4,41 +4,23 @@ import Link from 'next/link'
 import React from 'react'
 import { FaCodeBranch, FaEye, FaStar } from 'react-icons/fa'
 
-const username = githubuser
-// const username = 'bradtraversy'
-
-export const dynamic = 'force-dynamic'
+const username = typeof githubuser === 'string' ? githubuser : 'bradtraversy'
 
 export default async function ReposPage() {
   let repos: Repository[] = []
 
   try {
-    const response = await fetch(
-      `https://api.github.com/users/${username}/repos`,
-      {
-        headers: {
-          Authorization: `token ${process.env.GITHUB_ACCESS_TOKEN}`,
-        },
-      }
-    )
-
-    if (!response.ok) {
-      throw new Error(`GitHub API error: ${response.status}`)
-    }
-
-    const data = await response.json()
-
-    if (Array.isArray(data)) {
-      repos = data
-    } else {
-      console.error('Unexpected response format:', data)
-    }
-  } catch (error) {
-    console.error('Error fetching repos:', error)
-    // Optionally, you can set a fallback or show an error message
+    const res = await fetch(`https://api.github.com/users/${username}/repos`, {
+      headers: {
+        Authorization: `token ${process.env.GITHUB_ACCESS_TOKEN || ''}`,
+      },
+    })
+    const data = await res.json()
+    repos = Array.isArray(data) ? data : []
+  } catch (err) {
+    console.error('Error fetching repos:', err)
+    repos = []
   }
-
-  await new Promise((resolve) => setTimeout(resolve, 1000))
 
   return (
     <div>
