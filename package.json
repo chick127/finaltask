@@ -11,14 +11,7 @@
   "dependencies": {
     "beta": "^0.0.1",
     "framer-motion": "^12.23.24",
-<<<<<<< HEAD
-    "mongodb": "^7.0.0",
-    "mongoose": "^9.0.1",
     "next": "15.5.5",
-    "next-auth": "^4.24.13",
-=======
-    "next": "^16.0.7",
->>>>>>> 4faebf5f8d87ef8f809eda0fb0a027a3e4d88409
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-icons": "^5.5.0"
