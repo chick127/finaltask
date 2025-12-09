@@ -44,20 +44,23 @@ export default async function ReposPage() {
 
       {repos.length > 0 ? (
         <ul>
-          {repos.map((repo: Repository) => (
-            <li key={repo.id} className="bg-gray-100 m-4 p-4 rounded-md">
-              <Link href={`/repos/${repo.name}`} className="block">
-                <h3 className="text-xl font-bold">{repo.name}</h3>
+          {repos.map((repo) => (
+            <li
+              key={repo.id ?? repo.name}
+              className="bg-gray-100 m-4 p-4 rounded-md"
+            >
+              <Link href={`/repos/${repo.name ?? ''}`} className="block">
+                <h3 className="text-xl font-bold">{repo.name ?? 'No name'}</h3>
                 <p>{repo.description ?? 'No description'}</p>
                 <div className="flex justify-between items-center mt-2">
                   <span className="flex items-center gap-1">
-                    <FaStar /> {repo.stargazers_count}
+                    <FaStar /> {repo.stargazers_count ?? 0}
                   </span>
                   <span className="flex items-center gap-1">
-                    <FaCodeBranch /> {repo.forks_count}
+                    <FaCodeBranch /> {repo.forks_count ?? 0}
                   </span>
                   <span className="flex items-center gap-1">
-                    <FaEye /> {repo.watchers_count}
+                    <FaEye /> {repo.watchers_count ?? 0}
                   </span>
                 </div>
               </Link>
