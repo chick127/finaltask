@@ -7,6 +7,8 @@ import { FaCodeBranch, FaEye, FaStar } from 'react-icons/fa'
 const username = githubuser
 // const username = 'bradtraversy'
 
+export const dynamic = 'force-dynamic'
+
 export default async function ReposPage() {
   let repos: Repository[] = []
 
