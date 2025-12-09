@@ -1,8 +1,9 @@
-import type { NextAuthOptions } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 import GitHubProvider from 'next-auth/providers/github'
+import type { JWT } from 'next-auth/jwt'
+import type { Session, User } from 'next-auth'
 
-export const authConfig: NextAuthOptions = {
+export const authConfig = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -18,13 +19,13 @@ export const authConfig: NextAuthOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET || 'super-secret-key-for-development',
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user }: { token: JWT; user: User | undefined }) {
       if (user) {
         token.id = user.id
       }
       return token
     },
-    async session({ session, token }) {
+    async session({ session, token }: { session: Session; token: JWT }) {
       if (token) {
         session.user.id = token.id as string
       }
