@@ -15,26 +15,32 @@ export const dynamic = 'force-dynamic' // 항상 서버에서 렌더링
 export default async function ReposPage() {
   let repos: Repository[] = []
 
-  try {
-    const response = await fetch(
-      `https://api.github.com/users/${username}/repos`,
-      {
-        headers: {
-          Authorization: `token ${process.env.GITHUB_ACCESS_TOKEN || ''}`,
-        },
+  // 환경변수 존재할 때만 fetch
+  if (process.env.GITHUB_ACCESS_TOKEN) {
+    try {
+      const response = await fetch(
+        `https://api.github.com/users/${username}/repos`,
+        {
+          headers: {
+            Authorization: `token ${process.env.GITHUB_ACCESS_TOKEN}`,
+          },
+        }
+      )
+
+      const data = await response.json()
+
+      // 배열이 아니면 빈 배열로 처리
+      repos = Array.isArray(data) ? data : []
+      if (!Array.isArray(data)) {
+        console.warn('Unexpected response from GitHub API:', data)
       }
-    )
-
-    const data = await response.json()
-
-    // 안전하게 배열만 사용
-    repos = Array.isArray(data) ? data : []
-    if (!Array.isArray(data)) {
-      console.error('Unexpected response format from GitHub API:', data)
+    } catch (error) {
+      console.error('Error fetching GitHub repos:', error)
+      repos = [] // fetch 실패 시에도 안전
     }
-  } catch (error) {
-    console.error('Error fetching repos:', error)
-    repos = [] // fetch 실패 시에도 map 호출 가능
+  } else {
+    console.warn('No GitHub token provided, using empty repos list')
+    repos = [] // 빌드 시점에 token 없으면 빈 배열
   }
 
   return (
