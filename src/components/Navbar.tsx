@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import React from 'react'
+import SignInButton from './SignInButton'
 
 export default function Navbar() {
   return (
@@ -15,12 +16,13 @@ export default function Navbar() {
           <Link href="/about" className="text-gray-300 hover:text-white">
             About
           </Link>
-          <Link href="/project" className="text-gray-300 hover:text-white">
+          <Link href="/repos" className="text-gray-300 hover:text-white">
             Project
           </Link>
           <Link href="/team" className="text-gray-300 hover:text-white">
             Team
           </Link>
+          <SignInButton />
         </div>
       </div>
     </nav>

@@ -1,0 +1,74 @@
+'use client'
+import { useSession } from 'next-auth/react'
+import { redirect, useRouter } from 'next/navigation'
+import React, { useState } from 'react'
+
+export const dynamic = 'force-dynamic'
+
+export default function AddTopicPage() {
+  const [title, setTitle] = useState('')
+  const [description, setDescription] = useState('')
+  const router = useRouter()
+
+  const { status, data: session } = useSession()
+
+  if (status === 'loading') {
+    return <div>Loading...</div>
+  }
+
+  if (status === 'unauthenticated') {
+    redirect('/login')
+  }
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if (!title || !description) {
+      alert('Title과 Description을 모두 입력하세요')
+    }
+    try {
+      const res = await fetch('/api/topics', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ title, description }),
+      })
+      if (res.ok) {
+        router.push('/')
+        router.refresh()
+      } else {
+        throw new Error('Topic 생성에 실패했습니다')
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  return (
+    <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
+      <input
+        type="text"
+        className="border border-slate-500 p-4"
+        placeholder="Topic Title"
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          setTitle(e.target.value)
+        }
+        value={title}
+      />
+      <textarea
+        className="border border-slate-500 p-4 h-32"
+        placeholder="Topic Description"
+        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+          setDescription(e.target.value)
+        }
+        value={description}
+      />
+      <button
+        className="bg-green-800 text-white font-bold px-6 py-3 w-fit rounded-md"
+        type="submit"
+      >
+        Add Topic
+      </button>
+    </form>
+  )
+}
