@@ -15,34 +15,25 @@ export const dynamic = 'force-dynamic'
 export default async function ReposPage() {
   let repos: Repository[] = []
 
-  // 환경변수 존재 여부 체크
-  const token = process.env.GITHUB_ACCESS_TOKEN
+  try {
+    const response = await fetch(
+      `https://api.github.com/users/${username}/repos`
+    )
 
-  if (token) {
-    try {
-      const response = await fetch(
-        `https://api.github.com/users/${username}/repos`,
-        {
-          headers: {
-            Authorization: `token ${token}`,
-          },
-        }
-      )
-
+    if (!response.ok) {
+      console.error('GitHub API error:', response.status, response.statusText)
+      repos = []
+    } else {
       const data = await response.json()
-
-      // 배열이 아니면 빈 배열 처리
       repos = Array.isArray(data) ? data : []
       if (!Array.isArray(data)) {
         console.warn('Unexpected GitHub API response:', data)
+        repos = []
       }
-    } catch (error) {
-      console.error('Error fetching GitHub repos:', error)
-      repos = [] // fetch 실패 시에도 안전
     }
-  } else {
-    console.warn('No GitHub token provided, using empty repos list')
-    repos = [] // 환경변수 없으면 빈 배열
+  } catch (error) {
+    console.error('Error fetching GitHub repos:', error)
+    repos = []
   }
 
   return (
