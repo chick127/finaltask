@@ -1,6 +1,6 @@
 'use client'
-import Link from 'next/link'
 import React from 'react'
+import Image from 'next/image'
 
 export default function AboutPage() {
   return (
@@ -11,9 +11,11 @@ export default function AboutPage() {
       <div className="mb-10 px-4 sm:px-8 md:px-10 lg:px-20">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 items-center">
           <div className="flex justify-center items-center order-first">
-            <img
+            <Image
               src="/마티3.png"
               alt="프로필 이미지"
+              width={256}
+              height={320}
               className="w-64 h-auto object-cover rounded-2xl shadow-xl md:w-80"
             />
           </div>
@@ -84,11 +86,13 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <img
+            <Image
               src="/말풍선.png"
               alt="말풍선"
-              className="absolute hidden peer-hover:block z-50 
-                        transition-opacity duration-300 opacity-0 peer-hover:opacity-100 
+              width={288}
+              height={200}
+              className="absolute hidden peer-hover:block z-50
+                        transition-opacity duration-300 opacity-0 peer-hover:opacity-100
                         w-72 md:w-96
                         // 모바일: 중앙 정렬 유지
                         left-1/2 -translate-x-1/2 top-1/2
