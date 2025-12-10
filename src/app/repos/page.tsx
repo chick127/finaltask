@@ -1,14 +1,10 @@
 // app/repos/page.tsx
-import { githubuser } from '@/types/content'
 import { Repository } from '@/types/repo'
 import Link from 'next/link'
 import React from 'react'
 import { FaCodeBranch, FaEye, FaStar } from 'react-icons/fa'
 
-const username =
-  typeof githubuser === 'string' && githubuser.length > 0
-    ? githubuser
-    : 'bradtraversy' // fallback username
+const username = 'bradtraversy' // 안전하게 fallback username
 
 export const dynamic = 'force-dynamic'
 
@@ -19,21 +15,14 @@ export default async function ReposPage() {
     const response = await fetch(
       `https://api.github.com/users/${username}/repos`
     )
-
-    if (!response.ok) {
-      console.error('GitHub API error:', response.status, response.statusText)
-      repos = []
-    } else {
+    if (response.ok) {
       const data = await response.json()
       repos = Array.isArray(data) ? data : []
-      if (!Array.isArray(data)) {
-        console.warn('Unexpected GitHub API response:', data)
-        repos = []
-      }
+    } else {
+      console.warn('GitHub API error:', response.status, response.statusText)
     }
   } catch (error) {
     console.error('Error fetching GitHub repos:', error)
-    repos = []
   }
 
   return (
@@ -41,7 +30,6 @@ export default async function ReposPage() {
       <h2 className="text-2xl font-bold mb-4">
         Github Repositories of {username}
       </h2>
-
       {repos.length > 0 ? (
         <ul>
           {repos.map((repo) => (
