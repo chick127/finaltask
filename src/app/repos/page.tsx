@@ -4,7 +4,7 @@ import Link from 'next/link'
 import React from 'react'
 import { FaCodeBranch, FaEye, FaStar } from 'react-icons/fa'
 
-const username = 'bradtraversy' // 안전하게 fallback username
+const username = 'chick127' // 안전하게 fallback username
 
 export const dynamic = 'force-dynamic'
 
